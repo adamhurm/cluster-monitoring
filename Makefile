@@ -27,6 +27,8 @@ update_libs: $(JB_BINARY)        ## Updates vendor libs. Require a regeneration 
 vendor: $(JB_BINARY) jsonnetfile.json jsonnetfile.lock.json       ## Download vendor libs
 	rm -rf vendor
 	$(JB_BINARY) install
+	sed -i 's/beta.kubernetes.io\/os/kubernetes.io\/os/g' ./vendor/grafana/grafana.libsonnet ## Patch because beta.kubernetes was deprecated in 1.14
+	sed -i 's/beta.kubernetes.io\/os/kubernetes.io\/os/g' ./vendor/prometheus-operator/prometheus-operator.libsonnet ## Patch because beta.kubernetes was deprecated in 1.14
 
 fmt:        ## Formats all jsonnet and libsonnet files (except on vendor dir)
 	@echo "Formatting jsonnet files"
