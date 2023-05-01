@@ -30,9 +30,10 @@ vendor: $(JB_BINARY) jsonnetfile.json jsonnetfile.lock.json       ## Download ve
 	## Patch because beta.kubernetes was deprecated in 1.14
 	sed -i 's/beta.kubernetes.io\/os/kubernetes.io\/os/g' ./vendor/grafana/grafana.libsonnet
 	sed -i 's/beta.kubernetes.io\/os/kubernetes.io\/os/g' ./vendor/prometheus-operator/prometheus-operator.libsonnet
-	sed -i 's/beta.kubernetes.io\/os/kubernetes.io\/os/g' ./manifests/grafana-deployment.yaml
-	sed -i 's/beta.kubernetes.io\/os/kubernetes.io\/os/g' ./manifests/setup/prometheus-operator-deployment.yaml
-
+	## Patch because k3s no longer supports v1beta1
+	for f in `grep -R "authentication.k8s.io/v1beta1" vendor | awk '{print $$1}' | rev | cut -c2- | rev`; do \
+	    sed -i 's/authentication.k8s.io\/v1beta1/authentication.k8s.io\/v1/g' ./$$f; \
+	done
 fmt:        ## Formats all jsonnet and libsonnet files (except on vendor dir)
 	@echo "Formatting jsonnet files"
 	@find . -type f \( -iname "*.libsonnet" -or -iname "*.jsonnet" \) -print -or -name "vendor" -prune | xargs -n 1 -- $(JSONNET_FMT) -i
@@ -54,20 +55,20 @@ tar: manifests        ## Generates a .tar.gz from manifests dir
 
 $(JB_BINARY):        ## Installs jsonnet-bundler utility
 	@echo "Installing jsonnet-bundler"
-	@go get -u github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb
+	@go install github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest
 
 $(JSONNET_BIN):        ## Installs jsonnet and jsonnetfmt utility
 	@echo "Installing jsonnet"
-	@go get -u github.com/google/go-jsonnet/cmd/jsonnet
-	@go get -u github.com/google/go-jsonnet/cmd/jsonnetfmt
-	@go get -u github.com/brancz/gojsontoyaml
+	@go install github.com/google/go-jsonnet/cmd/jsonnet@latest
+	@go install github.com/google/go-jsonnet/cmd/jsonnetfmt@latest
+	@go install github.com/brancz/gojsontoyaml@latest
 
 update_tools:        ## Updates jsonnet, jsonnetfmt and jb utilities
 	@echo "Updating jsonnet"
-	@go get -u github.com/google/go-jsonnet/cmd/jsonnet
-	@go get -u github.com/google/go-jsonnet/cmd/jsonnetfmt
-	@go get -u github.com/brancz/gojsontoyaml
-	@go get -u github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb
+	@go install github.com/google/go-jsonnet/cmd/jsonnet@latest
+	@go install github.com/google/go-jsonnet/cmd/jsonnetfmt@latest
+	@go install github.com/brancz/gojsontoyaml@latest
+	@go install github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest
 
 change_suffix:        ## Changes suffix for the ingress. Pass suffix=[suffixURL] as argument
 	@echo "Ingress IPs changed to [service].${suffix}"

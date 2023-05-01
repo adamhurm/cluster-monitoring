@@ -74,7 +74,7 @@ local k = import 'ksonnet/ksonnet.beta.4/k.libsonnet';
       daemonset.mixin.spec.selector.withMatchLabels(podLabels) +
       daemonset.mixin.spec.template.metadata.withLabels(podLabels) +
       daemonset.mixin.spec.template.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.withNodeSelectorTerms([{ matchExpressions: [{ key: 'kubernetes.io/arch', operator: 'In', values: ['arm', 'arm64'] }] }]) +
-      daemonset.mixin.spec.template.spec.withTolerations([{ operator: 'Exists' }]) +
+      daemonset.mixin.spec.template.spec.withTolerations([{ 'operator': 'Exists' }]) +
       daemonset.mixin.spec.template.spec.withServiceAccountName('arm-exporter') +
       daemonset.mixin.spec.template.spec.withContainers(c),
 

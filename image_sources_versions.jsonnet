@@ -3,7 +3,7 @@
     versions+:: {
       prometheus: 'v2.19.1',
       alertmanager: 'v0.21.0',
-      kubeStateMetrics: '1.9.6',
+      kubeStateMetrics: '2.8.2',
       kubeRbacProxy: 'v0.5.0',
       addonResizer: '2.3',
       nodeExporter: 'v0.18.1',
@@ -20,7 +20,7 @@
     imageRepos+:: {
       prometheus: 'prom/prometheus',
       alertmanager: 'prom/alertmanager',
-      kubeStateMetrics: 'carlosedp/kube-state-metrics',
+      kubeStateMetrics: 'gcr.io/k8s-staging-kube-state-metrics/kube-state-metrics-arm64',
       kubeRbacProxy: 'carlosedp/kube-rbac-proxy',
       addonResizer: 'carlosedp/addon-resizer',
       nodeExporter: 'prom/node-exporter',

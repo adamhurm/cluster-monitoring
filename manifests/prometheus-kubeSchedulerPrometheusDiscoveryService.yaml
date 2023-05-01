@@ -7,9 +7,12 @@ metadata:
   namespace: kube-system
 spec:
   clusterIP: None
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
   ports:
-  - name: http-metrics
-    port: 10251
-    targetPort: 10251
+  - name: https-metrics
+    port: 10259
+    targetPort: 10259
   selector:
     component: kube-scheduler
